@@ -106,7 +106,8 @@ def download_video(url):
         'format': 'mp4',
         'outtmpl': f'{video_id}.%(ext)s',
         'quiet': True,
-        'user_agent': 'Mozilla/5.0'
+        'user_agent': 'Mozilla/5.0',
+        'cookiefile': 'cookies.txt'  # ← важно
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -115,7 +116,8 @@ def download_video(url):
             if filename.endswith(".webm") or filename.endswith(".mkv"):
                 filename = filename.rsplit(".", 1)[0] + ".mp4"
             return filename
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] {e}")
         return None
 
 def search_tracks(query, max_results=10):
