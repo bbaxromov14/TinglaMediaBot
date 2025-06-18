@@ -103,22 +103,17 @@ def is_supported_url(url):
     return "youtube.com" in url or "youtu.be" in url or "instagram.com" in url
 
 def download_video(url):
-    import os
     video_id = str(uuid.uuid4())[:8]
-
-cookie_file = os.path.join(os.path.dirname(__file__), "cookies.txt")
-
+    
+    cookie_file = os.path.join(os.path.dirname(__file__), "cookies.txt")
 
     ydl_opts = {
         'format': 'mp4',
         'outtmpl': f'{video_id}.%(ext)s',
         'quiet': True,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'user_agent': 'Mozilla/5.0',
+        'cookiefile': cookie_file if os.path.exists(cookie_file) else None
     }
-
-    if cookie_file and os.path.exists(cookie_file):
-        ydl_opts['cookiefile'] = cookie_file
-        print(f"[YT-DLP] Используется cookie-файл: {cookie_file}")
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
