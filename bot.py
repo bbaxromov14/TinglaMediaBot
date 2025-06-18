@@ -104,13 +104,25 @@ def is_supported_url(url):
 
 def download_video(url):
     video_id = str(uuid.uuid4())[:8]
+    
+    # Выбираем файл cookies в зависимости от платформы
+    if "youtube.com" in url or "youtu.be" in url:
+        cookie_file = "cookies_youtube.txt"
+    elif "instagram.com" in url:
+        cookie_file = "cookies.txt"
+    else:
+        cookie_file = None  # если нет — можно без cookies
+
     ydl_opts = {
         'format': 'mp4',
         'outtmpl': f'{video_id}.%(ext)s',
         'quiet': True,
-        'user_agent': 'Mozilla/5.0',
-        'cookiefile': 'cookies.txt'  # ← важно
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
     }
+
+    if cookie_file and os.path.exists(cookie_file):
+        ydl_opts['cookiefile'] = cookie_file
+
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
