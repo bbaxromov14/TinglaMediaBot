@@ -165,7 +165,6 @@ def download_audio_by_id(video_id):
     'format': 'bestaudio/best',
     'quiet': True,
     'cookiefile': cookie_file,
-    ...
 }
 
     try:
