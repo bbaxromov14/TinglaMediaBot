@@ -106,13 +106,8 @@ def download_video(url):
     import os
     video_id = str(uuid.uuid4())[:8]
 
-    # Выбор файла cookies по платформе
-    if "youtube.com" in url or "youtu.be" in url:
-        cookie_file = os.path.join(os.path.dirname(__file__), "cookies_youtube.txt")
-    elif "instagram.com" in url:
-        cookie_file = os.path.join(os.path.dirname(__file__), "cookies.txt")
-    else:
-        cookie_file = None
+cookie_file = os.path.join(os.path.dirname(__file__), "cookies.txt")
+
 
     ydl_opts = {
         'format': 'mp4',
@@ -169,16 +164,15 @@ def download_audio_by_id(video_id):
     filename = f"{video_id}.mp3"
     if os.path.exists(filename):
         return filename
+    cookie_file = os.path.join(os.path.dirname(__file__), "cookies.txt")
+
     ydl_opts = {
-        'format': 'bestaudio/best',
-        'quiet': True,
-        'outtmpl': f'{video_id}.%(ext)s',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-    }
+    'format': 'bestaudio/best',
+    'quiet': True,
+    'cookiefile': cookie_file,
+    ...
+}
+
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
