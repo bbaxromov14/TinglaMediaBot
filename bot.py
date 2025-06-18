@@ -4,6 +4,8 @@ import os
 import uuid
 from dotenv import load_dotenv
 from telebot.types import BotCommand
+from fastapi import FastAPI
+import threading
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton
 
 
@@ -309,6 +311,15 @@ def set_bot_commands(message):
     bot.reply_to(message, "✅ Buyruqlar ro'yxati o‘rnatildi.")
 
 
-if __name__ == '__main__':
+app = FastAPI()
+
+@app.get("/")
+def ping():
+    return {"status": "ok"}
+
+def run_bot():
     print("Bot is running...")
     bot.infinity_polling()
+
+# Запуск Telegram-бота в отдельном потоке
+threading.Thread(target=run_bot).start()
