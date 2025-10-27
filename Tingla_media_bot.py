@@ -9,6 +9,21 @@ import logging
 from mutagen.mp3 import MP3
 from mutagen.id3 import APIC, TIT2, TPE1, ID3
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, BotCommand
+from flask import Flask
+import threading
+
+# Простой веб-сервер для Render
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run_web():
+    app.run(host='0.0.0.0', port=5000)
+
+# Запускаем веб-сервер в отдельном потоке
+threading.Thread(target=run_web, daemon=True).start()
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
